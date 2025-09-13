@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LISHLIKE - Mini Blog</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #4CAF50;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .container {
+      width: 90%;
+      max-width: 900px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .upload-section {
+      margin-bottom: 20px;
+    }
+    .upload-section input, .upload-section textarea, .upload-section button {
+      width: 100%;
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+    .upload-section button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .post {
+      border-bottom: 1px solid #ddd;
+      padding: 15px 0;
+    }
+    .post h3 {
+      margin: 0 0 10px;
+      color: #333;
+    }
+    .post img, .post video {
+      max-width: 100%;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>LISHLIKE - Mini Blog</header>
+
+  <div class="container">
+    <div class="upload-section">
+      <h2>Create Post</h2>
+      <input type="text" id="title" placeholder="Enter Title">
+      <textarea id="content" rows="4" placeholder="Write your article here..."></textarea>
+      <input type="file" id="media" accept="image/*,video/*">
+      <button onclick="addPost()">Upload</button>
+    </div>
+
+    <div id="posts">
+      <!-- Uploaded posts will appear here -->
+    </div>
+  </div>
+
+  <script>
+    function addPost() {
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+      const media = document.getElementById('media').files[0];
+
+      if (!title && !content && !media) {
+        alert("Please add some content!");
+        return;
+      }
+
+      let postDiv = document.createElement("div");
+      postDiv.classList.add("post");
+
+      let titleEl = document.createElement("h3");
+      titleEl.innerText = title;
+      postDiv.appendChild(titleEl);
+
+      if (content) {
+        let contentEl = document.createElement("p");
+        contentEl.innerText = content;
+        postDiv.appendChild(contentEl);
+      }
+
+      if (media) {
+        let url = URL.createObjectURL(media);
+        if (media.type.startsWith("image/")) {
+          let img = document.createElement("img");
+          img.src = url;
+          postDiv.appendChild(img);
+        } else if (media.type.startsWith("video/")) {
+          let video = document.createElement("video");
+          video.src = url;
+          video.controls = true;
+          postDiv.appendChild(video);
+        }
+      }
+
+      document.getElementById("posts").prepend(postDiv);
+
+      document.getElementById('title').value = "";
+      document.getElementById('content').value = "";
+      document.getElementById('media').value = "";
+    }
+  </script>
+</body>
+</html>
