@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LISLIKE - Social Media</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f9; margin: 0; padding: 0; }
+    header { background: #ff7a00; color: #fff; padding: 12px; text-align: center; font-size: 20px; font-weight: bold; }
+    nav { display: flex; flex-wrap: wrap; justify-content: space-around; background: #fff; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 1000; }
+    nav button { flex: 1; padding: 12px; border: none; background: none; cursor: pointer; font-size: 16px; }
+    nav button:hover { background: #f0f0f0; }
+    section { display: none; padding: 20px; }
+    section.active { display: block; }
+    .card { background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); max-width: 500px; margin: 15px auto; }
+    input, textarea, select { width: 90%; padding: 10px; margin: 6px 0; border: 1px solid #ccc; border-radius: 5px; }
+    button.action { padding: 8px 16px; background: #ff7a00; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
+    button.action:hover { background: #e06900; }
+    .feed { max-width: 500px; margin: auto; }
+    #dm-box, #chat-box { background:#f4f4f9; padding:10px; border-radius:5px; height:200px; overflow-y:auto; }
+  </style>
+</head>
+<body>
+  <header>🔥 LISLIKE Social Media</header>
+
+  <!-- Navigation -->
+  <nav>
+    <button onclick="showPage('home')">🏠 Home</button>
+    <button onclick="showPage('profile')">👤 Profile</button>
+    <button onclick="showPage('search')">🔍 Search</button>
+    <button onclick="showPage('reels')">🎬 Reels</button>
+    <button onclick="showPage('chat')">💬 Public Chat</button>
+    <button onclick="showPage('followers')">👥 Followers</button>
+    <button onclick="showPage('settings')">⚙️ Settings</button>
+    <button onclick="showPage('earning')">💰 Earning</button>
+    <button onclick="showPage('dm')">📩 Direct Messages</button>
+  </nav>
+
+  <!-- Home -->
+  <section id="home" class="active">
+    <div class="card">
+      <h2>📱 Login with Mobile</h2>
+      <input type="text" id="mobile" placeholder="Enter Mobile Number (10 digit)"><br>
+      <div id="recaptcha-container"></div>
+      <button class="action" onclick="sendOTP()">Send OTP</button>
+      <input type="text" id="otp" placeholder="Enter OTP"><br>
+      <button class="action" onclick="verifyOTP()">Verify & Login</button>
+    </div>
+    <div class="card">
+      <h2>🔑 Or Login with Google</h2>
+      <button class="action" onclick="googleLogin()">Google Sign-In</button>
+    </div>
+    <div class="card">
+      <h2>📝 Create Post</h2>
+      <textarea id="post-text" placeholder="What's on your mind?"></textarea><br>
+      <button id="btn-post" class="action">Post</button>
+    </div>
+    <div class="feed" id="feed"></div>
+  </section>
+
+  <!-- Profile -->
+  <section id="profile">
+    <div class="card">
+      <h2>👤 Profile Edit</h2>
+      <img id="avatar-preview" src="https://via.placeholder.com/100" width="100" height="100"><br>
+      <input type="file" id="p-avatar" accept="image/*"><br>
+      <input type="text" id="p-name" placeholder="Enter your name"><br>
+      <textarea id="p-bio" placeholder="Write your bio..."></textarea><br>
+      <button id="btn-save-profile" class="action">Save Profile</button>
+    </div>
+  </section>
+
+  <!-- Search -->
+  <section id="search"><div class="card"><h2>🔍 Search Users</h2><div id="userList"></div></div></section>
+
+  <!-- Reels -->
+  <section id="reels">
+    <div class="card">
+      <h2>🎬 Upload Reel</h2>
+      <input type="file" id="reel-file" accept="video/*"><br>
+      <button class="action" onclick="uploadReel()">Upload Reel</button>
+    </div>
+    <div class="card"><h2>🎥 Reels Feed</h2><div id="reelsFeed"></div></div>
+  </section>
+
+  <!-- Public Chat -->
+  <section id="chat">
+    <div class="card">
+      <h2>💬 Public Chat</h2>
+      <div id="chat-box"></div>
+      <input type="text" id="chat-input" placeholder="Type a message...">
+      <button class="action" onclick="sendMessage()">Send</button>
+    </div>
+  </section>
+
+  <!-- Followers -->
+  <section id="followers">
+    <div class="card"><h2>👥 Your Followers</h2><div id="followersList"></div></div>
+    <div class="card"><h2>➡️ You are Following</h2><div id="followingList"></div></div>
+  </section>
+
+  <!-- Settings -->
+  <section id="settings">
+    <div class="card">
+      <h2>⚙️ Settings</h2>
+      <label>Choose Theme:</label><br>
+      <select onchange="changeTheme(this.value)">
+        <option>Light</option><option>Dark</option><option>Blue</option>
+      </select><br>
+      <label>Wallpaper:</label><br>
+      <input type="file" accept="image/*" onchange="changeWallpaper(event)"><br>
+    </div>
+  </section>
+
+  <!-- Earning -->
+  <section id="earning">
+    <div class="card"><h2>💰 Earning Panel</h2><p>📊 Total Ads Revenue: $1200</p><p>👥 Active Users: 560</p></div>
+  </section>
+
+  <!-- Direct Messages -->
+  <section id="dm">
+    <div class="card">
+      <h2>📩 Direct Messages</h2>
+      <div id="dm-header"></div>
+      <div id="dm-box"></div>
+      <input type="text" id="dm-input" placeholder="Type a private message...">
+      <button class="action" onclick="sendDM()">Send</button>
+    </div>
+  </section>
+
+  <!-- JS -->
+  <script>
+    function showPage(id){ document.querySelectorAll("section").forEach(sec=>sec.classList.remove("active")); document.getElementById(id).classList.add("active"); }
+    function changeTheme(theme){ if(theme==="Dark"){document.body.style.background="#222";document.body.style.color="#fff";} else if(theme==="Blue"){document.body.style.background="#cce5ff";} else {document.body.style.background="#f4f4f9";document.body.style.color="#000";} }
+    function changeWallpaper(e){ let file=e.target.files[0]; if(file){document.body.style.backgroundImage=`url(${URL.createObjectURL(file)})`;document.body.style.backgroundSize="cover";} }
+  </script>
+
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCyKdk317im6p4j3mQnhkd20WBpdb_V_iM",
+      authDomain: "my-web2-a3f24.firebaseapp.com",
+      projectId: "my-web2-a3f24",
+      storageBucket: "my-web2-a3f24.firebasestorage.app",
+      messagingSenderId: "893336615269",
+      appId: "1:893336615269:web:7ce202cacf7201c7f0898c",
+      measurementId: "G-L86ND2H67H",
+      databaseURL: "https://my-web2-a3f24-default-rtdb.firebaseio.com/"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let confirmationResult;
+    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { size: "invisible" });
+
+    window.sendOTP = () => {
+      let phone = document.getElementById("mobile").value.trim();
+      if (/^\d{10}$/.test(phone)) { phone = "+91" + phone; }
+      if (!phone.startsWith("+")) { alert("⚠️ Enter number with country code (e.g. +91XXXXXXXXXX)"); return; }
+
+      signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
+        .then((result) => { confirmationResult = result; alert("✅ OTP sent to " + phone); })
+        .catch((error) => { console.error(error); alert("❌ " + error.message); });
+    };
+
+    window.verifyOTP = () => {
+      const code = document.getElementById("otp").value.trim();
+      if (!confirmationResult) { alert("⚠️ Please request OTP first!"); return; }
+
+      confirmationResult.confirm(code)
+        .then((result) => { alert("🎉 Login Successful: " + (result.user.phoneNumber || "")); })
+        .catch((error) => { console.error(error); alert("❌ " + error.message); });
+    };
+
+    window.googleLogin = () => {
+      const provider = new GoogleAuthProvider();
+      signInWithPopup(auth, provider)
+        .then(r => alert("Login ✅ " + r.user.displayName))
+        .catch(e => alert("❌ " + e.message));
+    };
+  </script>
+</body>
+</html>
